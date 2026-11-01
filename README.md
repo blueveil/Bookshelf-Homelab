@@ -1,5 +1,7 @@
 # Compact 3-Tier Shelf Beginner Homelab 
 
+# **NOTE: Offline while I relocate to Chicago. Updated 2026-11-01**
+
 ## Overview
 This project documents a **small 3-tier shelf setup** for home lab / mini PCs / networking devices.  
 Goal: stable, open-airflow shelving for **2 mini PCs, switch, Raspberry Pi**, and optional **printed 10" patch panel**.  
