@@ -1,3 +1,5 @@
+![Bookshelf Homelab](/bookshelf-homelab.png)
+
 # Bookshelf Homelab
 
 > [!WARNING]
