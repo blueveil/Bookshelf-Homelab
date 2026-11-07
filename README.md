@@ -77,7 +77,7 @@ Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI 
 - **Notes sync:** Obsidian Self-hosted LiveSync on CouchDB 3.5, with CORS enabled and end-to-end encryption.
 - **Dashboard:** Homepage, with API-token widgets and `HOMEPAGE_ALLOWED_HOSTS` set.
 
-## Design decisions
+## Decisions
 
 | Decision | Why |
 |---|---|
@@ -87,7 +87,7 @@ Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI 
 | Not cloudflared | Deprecated |
 | Backups on separate hardware | powder holds the backups, not the machine being backed up |
 
-## What broke and how I fixed it
+## Troubleshooting
 
 | Problem | Cause | Fix |
 |---|---|---|
@@ -104,7 +104,7 @@ Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI 
 
 ## Roadmap
 
-**Fix first**
+**Priority**
 - [ ] DHCP reservations for the LXCs (addresses are hard-coded in configs)
 - [ ] SSH key auth, then disable password login
 - [ ] Review firewall rules (they predate Caddy)
@@ -123,7 +123,7 @@ Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI 
 - [ ] UPS
 - [ ] Label cables and ports
 
-## Bring-up after the move
+## After
 
 1. Shut down cleanly: guests, then jinx, powder, fishbones.
 2. Power on in order: router and switch, fishbones, powder, jinx, then the LXCs.
@@ -131,7 +131,3 @@ Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI 
 4. Confirm Tailscale is connected and Pi-hole is still the tailnet nameserver.
 5. Check Caddy, Homepage, Prometheus targets and Grafana, then run a PBS backup.
 6. Remove the offline banner at the top.
-
-## About this repo
-
-Skills shown: Linux administration, virtualization (Proxmox, LXC), backup design (PBS), DNS (Pi-hole, encrypted upstream), VPN access (Tailscale), reverse proxy and TLS (Caddy), monitoring (Prometheus, Grafana, Uptime Kuma), and troubleshooting. LAN addresses are included on purpose and are not routable from outside.
