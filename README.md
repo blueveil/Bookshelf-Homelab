@@ -1,130 +1,137 @@
-# Compact 3-Tier Shelf Beginner Homelab 
+# Bookshelf Homelab
 
-# **NOTE: Offline while I relocate to Chicago. Updated 2026-11-01**
+> [!WARNING]
+> **OFFLINE while I relocate.** The whole lab is powered down and being moved, so nothing here is reachable right now. This README describes the lab as it was last running. The bring-up steps are at the bottom.
 
-## Overview
-This project documents a **small 3-tier shelf setup** for home lab / mini PCs / networking devices.  
-Goal: stable, open-airflow shelving for **2 mini PCs, switch, Raspberry Pi**, and optional **printed 10" patch panel**.  
-Power management, cable routing, and device placement are included.
+A small, quiet, three-box homelab on a bookshelf: a Proxmox host, a Proxmox Backup Server, and a Raspberry Pi doing DNS. Everything is reachable remotely over Tailscale with real HTTPS and no port forwarding. Hosts are named with an Arcane theme (jinx, powder, fishbones).
 
----
-## Devices
+It is both a learning environment and a portfolio piece. This repo is the documentation. Secrets, keys and tokens are never committed, and placeholders like `<tailnet>` stand in for real names.
 
-### HP ProDesk 400 G4 DM
-- **CPU:** Intel Core i5-8500T (6C/6T)
-- **RAM:** 16GB (2x8GB Kingston DDR4 2666MHz)
-- **SSD 1 (M.2):**  
-- **SSD 2 (SATA):**  
+## Architecture
 
-### Dell OptiPlex 7060 Micro
-- **CPU:** Intel Core i5-8500T (6C/6T)
-- **RAM:** 16GB (2x8GB Samsung DDR4 2666MHz)
-- **SSD 1 (M.2):**  
-- **SSD 2 (SATA):**  
+```mermaid
+flowchart TB
+    Phone["Phone / laptop<br/>Tailscale client"]
 
-### Raspberry Pi 3B+  
-- **OS / Image:** Raspberry Pi OS 32-bit / Pi-hole
-- **MAC / Network:**  
-- **Notes:**  
+    subgraph Shelf["Bookshelf (192.168.0.0/24)"]
+        Fish["fishbones<br/>Pi 3B+<br/>Pi-hole, dnscrypt-proxy, Tailscale"]
+        subgraph Jinx["jinx - Proxmox VE 9.2"]
+            Caddy["100 Caddy + Tailscale"]
+            VW["101 Vaultwarden"]
+            UK["102 Uptime Kuma"]
+            Prom["103 Prometheus"]
+            PVEx["104 PVE exporter"]
+            Graf["105 Grafana"]
+            Couch["106 CouchDB"]
+            Home["107 Homepage"]
+        end
+        Powder["powder<br/>Proxmox Backup Server"]
+    end
 
-### Networking / Switch
-- **Switch:** tp-link TL-SG108E
-- **Ports used:**  
-- **Notes:**  
-
-### Power / Miscellaneous
-- **Power Strip:** (e.g., TESSAN 5ft flat surge protector)  
-- **Velcro / Rubber feet placement:**  
-- **Patch Panel:** Printed 10” placeholder (keystones TBD)  
-
----
-
-## SSDs Available
-- 512GB Patriot P210 (2.5" SATA, new)  
-- 500GB Samsung 870 EVO (2.5" SATA, new)   
-- Planned future NVMe SSDs  
-
----
-
-## Shelf Layout Plan
-
+    Phone -- "Tailscale" --> Caddy
+    Caddy --> VW
+    Caddy --> Home
+    Caddy --> Fish
+    Caddy --> Jinx
+    Caddy --> Powder
+    Jinx -- "backups" --> Powder
+    Prom --> PVEx
+    Graf --> Prom
 ```
 
-# ==================== Top Shelf ====================  
-| |  
-| Dell Mini PC (velcro/rubber feet) |  
-| |
+## Hardware
 
-## ==================== Middle Shelf =================  
-| Patch Panel (printed 10") mounted horizontally |  
-| facing front, velcro or screws to shelf posts |
+| Name | Hardware | CPU / RAM | Storage | Role | IP |
+|---|---|---|---|---|---|
+| **jinx** | Dell OptiPlex 7060 Micro | i5-8500T, 16 GB | 512 GB Samsung 870 EVO | Proxmox VE 9.2 | 192.168.0.11 |
+| **powder** | HP ProDesk 400 G4 DM | i5-8500T, 16 GB | 512 GB Patriot 210 | Proxmox Backup Server 4.x | 192.168.0.12 |
+| **fishbones** | Raspberry Pi 3B+ | 1 GB | 32 GB SanDisk Max Endurance | Pi-hole v6, dnscrypt-proxy, Tailscale | 192.168.0.10 |
 
-## | Switch + Raspberry Pi side by side |  
-| velcro/rubber feet to secure |  
-| Power Strip (TESSAN) behind devices, velcroed|
+Also on the shelf: a custom 3D-printed 10-inch patch panel bracket, designed in Onshape. jinx and powder run Avahi, so they answer to `.local` names.
 
-# ==================== Bottom Shelf =================  
-| |  
-| HP Mini PC (velcro/rubber feet) |  
-| |
+## Services
 
-```
+| LXC | Service | Address | Reached via |
+|---|---|---|---|
+| 100 | Caddy + Tailscale | 192.168.0.189 | `caddy.<tailnet>.ts.net` |
+| 101 | Vaultwarden | 192.168.0.203:8000 (HTTPS) | Caddy `:8000` |
+| 102 | Uptime Kuma | 192.168.0.30:3001 | LAN |
+| 103 | Prometheus | 192.168.0.166:9090 | LAN |
+| 104 | PVE exporter | 192.168.0.137:9221 | scraped by Prometheus |
+| 105 | Grafana | 192.168.0.175:3000 | LAN |
+| 106 | CouchDB (Obsidian LiveSync) | 192.168.0.98:5984 | LiveSync clients |
+| 107 | Homepage | 192.168.0.157:3000 | Caddy `:8888` |
 
-### Notes:
-- ~1–2” gap above each device for airflow  
-- Open front & back → natural convection cooling  
-- Patch panel ports facing front → easy keystone access  
-- Power strip behind middle shelf → flat, mountable  
-- Velcro secures all devices, patch panel, and power strip  
-- Cables routed along posts, tied neatly  
+Caddy also proxies Pi-hole on `:8080`, the Proxmox UI on `:8006` and the PBS UI on `:8007`. Backups go to the `jinx-backup` datastore on powder (about 452 GB), added to Proxmox as storage `powder`. node_exporter v1.11.1 runs on all three hosts.
 
----
+> [!NOTE]
+> **Vaultwarden is running but not really in use**, and may never be. It stays up so the option exists. It still needs hardening before any real passwords go in (see the roadmap).
 
-## Initial Setup & Testing
+## How it fits together
 
-### Baseline Validation Log
+- **DNS:** Pi-hole v6 on fishbones filters the network and is the tailnet nameserver. Upstream queries go through dnscrypt-proxy on `127.0.0.1#5053`.
+- **Remote access:** Tailscale with MagicDNS and per-node HTTPS certs. Servers run `--accept-dns=false`. No router ports are forwarded.
+- **Reverse proxy:** Caddy runs in an LXC with Tailscale inside it (TUN device lines in the container config, and `tailscale set --operator=caddy` so Caddy can fetch certs). Services are port-based URLs under one hostname.
+- **Backups:** Proxmox adds PBS as storage using an API token, a datastore ACL and the PBS certificate fingerprint.
+- **Monitoring:** node_exporter on every host and prometheus-pve-exporter (read-only credentials, scraped at `/pve`) feed Prometheus. Grafana runs dashboards 1860 and 10347. Uptime Kuma watches services by raw IP and publishes a status page that Homepage reads.
+- **Notes sync:** Obsidian Self-hosted LiveSync on CouchDB 3.5, with CORS enabled and end-to-end encryption.
+- **Dashboard:** Homepage, with API-token widgets and `HOMEPAGE_ALLOWED_HOSTS` set.
 
-| **Node**          | **MemTest86+**    | **Stress Temp (3m)** | **SSD Health** | **Status**    |
-| ----------------- | ---------------- | -------------------- | -------------- | ------------- |
-| **HP ProDesk**    | ✅ Pass (2 Cycles)| 74°C (Factory Paste) | 100%           | **Certified** |
-| **Dell OptiPlex** | ✅ Pass (2 Cycles)| 71°C (Factory Paste) | "Good"         | **Certified** |
-| **Raspberry Pi 3B+** | TBD           | TBD                  | TBD            | TBD           |
-| **Switch**        | N/A              | Ambient              | N/A            | Operational   |
+## Design decisions
 
----
-## Maintenance History
+| Decision | Why |
+|---|---|
+| Tailscale instead of port forwarding | No inbound exposure, easy remote access |
+| Caddy instead of Nginx Proxy Manager | Tailscale issues per-node certs but no wildcards, so NPM subdomains gave cert mismatches. Caddy with port-based URLs works cleanly |
+| dnscrypt-proxy instead of Unbound | TCP/53 is blocked on my network, which Unbound's recursion needs |
+| Not cloudflared | Deprecated |
+| Backups on separate hardware | powder holds the backups, not the machine being backed up |
 
-- **2026-02-01:** HP ProDesk and Dell OptiPlex RAM and CPU stress-tested successfully.
-	- Updated BIOS on both machines.
-- **2026-02-03:** 3D printed SSD mounting grommets for HP ProDesk.
-- **TBD:** Patch panel printed, installed, keystones inserted.
+## What broke and how I fixed it
 
----
-## To-Do
-- Repaste and clean both mini PCs with **PTM7950**  
-- Install patch panel and mount above middle shelf  
-- Velcro switch, Pi, and power strip into position  
-- Route and tie cables along shelf posts  
-- Test airflow and device temps under load  
-- Optional: install mini fan for middle shelf  
+| Problem | Cause | Fix |
+|---|---|---|
+| Pi static IP via dhcpcd did nothing | Pi uses NetworkManager | Set it with `nmcli` |
+| Proxmox lost DNS after installing Tailscale | Tailscale rewrote `resolv.conf` | `tailscale set --accept-dns=false` |
+| Pi-hole exporter returned nothing | It targeted the v5 API | Removed it |
+| PVE exporter showed no data | Placeholder creds, wrong metrics path | Real read-only creds, `metrics_path: /pve` with `params` |
+| PBS storage add failed (401, fingerprint) | No token ACL, fingerprint missing | API token, datastore ACL, fingerprint in the dialog |
+| PBS login broke after a `user.cfg` edit | Spaces instead of tabs | Rewrote the file with tabs |
+| node_exporter would not start | Orphaned process held port 9100 | Found it with `ss -tlnp`, killed it, restarted the service |
+| LiveSync errors (CORS, uploads, HKDF, broken files, lockout) | CORS off, out-of-sync data | Enabled CORS, "Scan storage and database again", "Overwrite Server Data with This Device's Files", waited out the CouchDB lockout |
+| DNS conflict between Mullvad and Tailscale | Both managing DNS | Cleared by rebooting |
+| Whole lab offline for about a month | Switch uplink cable unplugged at the router | Plugged it back in |
 
----
-## Bill of Materials (Placeholder)
+## Roadmap
 
-| Item                      | Quantity | Notes                                |
-| ------------------------- | -------- | ------------------------------------ |
-| 3-Tier Book Shelf         | 1        | Open front/back, plastic/metal       |
-| Velcro strips             | TBD      | Heavy duty for devices + patch panel |
-| Anker power strip         | 1        | Flat plug, mountable                 |
-| Mini PCs                  | 2        | Dell + HP                            |
-| Raspberry Pi 3B+          | 1        | MicroSD/USB power                    |
-| Switch (SG108E / GS108E)  | 1        | 8 ports, managed/unmanaged           |
-| Patch panel (printed 10”) | 1        | Mount vertically above switch/Pi     |
-| Patch panel bracket       | 1        | Designed it myself in Onshape        |
-| SSDs                      | TBD      | see list above                       |
-| Cable ties / Velcro ties  | TBD      | For neat cable routing               |
+**Fix first**
+- [ ] DHCP reservations for the LXCs (addresses are hard-coded in configs)
+- [ ] SSH key auth, then disable password login
+- [ ] Review firewall rules (they predate Caddy)
+- [ ] Alerting from Uptime Kuma and Grafana
+- [ ] Vaultwarden hardening: admin token, close sign-ups
+- [ ] Tailscale widget for Homepage
 
----
-## Notes
-- This setup avoids racks entirely by using a desk organizer shelf 
-- Keeps devices accessible, airflow optimized, and tidy  
+**Backups**
+- [ ] Back up the host configs (only guests go to PBS today)
+- [ ] Offsite copy of the PBS datastore
+- [ ] Restic for archive data
+- [ ] Test a restore
+
+**Hardware**
+- [ ] Move jinx to NVMe: back up to PBS, reinstall on NVMe, restore
+- [ ] UPS
+- [ ] Label cables and ports
+
+## Bring-up after the move
+
+1. Shut down cleanly: guests, then jinx, powder, fishbones.
+2. Power on in order: router and switch, fishbones, powder, jinx, then the LXCs.
+3. Check the LAN subnet still matches the addresses above. If not, the hard-coded LXC addresses need updating.
+4. Confirm Tailscale is connected and Pi-hole is still the tailnet nameserver.
+5. Check Caddy, Homepage, Prometheus targets and Grafana, then run a PBS backup.
+6. Remove the offline banner at the top.
+
+## About this repo
+
+Skills shown: Linux administration, virtualization (Proxmox, LXC), backup design (PBS), DNS (Pi-hole, encrypted upstream), VPN access (Tailscale), reverse proxy and TLS (Caddy), monitoring (Prometheus, Grafana, Uptime Kuma), and troubleshooting. LAN addresses are included on purpose and are not routable from outside.
