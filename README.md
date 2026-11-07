@@ -43,9 +43,9 @@ flowchart TB
 
 | Name | Hardware | CPU / RAM | Storage | Role | IP |
 |---|---|---|---|---|---|
+| **fishbones** | Raspberry Pi 3B+ | 1 GB | 32 GB SanDisk Max Endurance | Pi-hole v6, dnscrypt-proxy, Tailscale | 192.168.0.10 |
 | **jinx** | Dell OptiPlex 7060 Micro | i5-8500T, 16 GB | 512 GB Samsung 870 EVO | Proxmox VE 9.2 | 192.168.0.11 |
 | **powder** | HP ProDesk 400 G4 DM | i5-8500T, 16 GB | 512 GB Patriot 210 | Proxmox Backup Server 4.x | 192.168.0.12 |
-| **fishbones** | Raspberry Pi 3B+ | 1 GB | 32 GB SanDisk Max Endurance | Pi-hole v6, dnscrypt-proxy, Tailscale | 192.168.0.10 |
 
 Also on the shelf: a custom 3D-printed 10-inch patch panel bracket, designed in Onshape. jinx and powder run Avahi, so they answer to `.local` names.
 
