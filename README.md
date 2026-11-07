@@ -3,7 +3,7 @@
 > [!WARNING]
 > **OFFLINE while I relocate.** The whole lab is powered down and being moved, so nothing here is reachable right now. This README describes the lab as it was last running. The bring-up steps are at the bottom.
 
-A small, quiet, three-box homelab on a bookshelf: a Proxmox host, a Proxmox Backup Server, and a Raspberry Pi doing DNS. Everything is reachable remotely over Tailscale with real HTTPS and no port forwarding. Hosts are named with an Arcane theme (jinx, powder, fishbones).
+A small, quiet homelab on a 3-tier bookshelf: a Proxmox host, a Proxmox Backup Server, and a Raspberry Pi doing DNS. Everything is reachable remotely over Tailscale with real HTTPS and no port forwarding. Hosts are named with an Arcane theme (jinx, powder, fishbones).
 
 It is both a learning environment and a portfolio piece. This repo is the documentation. Secrets, keys and tokens are never committed, and placeholders like `<tailnet>` stand in for real names.
 
@@ -11,7 +11,7 @@ It is both a learning environment and a portfolio piece. This repo is the docume
 
 ```mermaid
 flowchart TB
-    Phone["Phone / laptop<br/>Tailscale client"]
+    Phone["Phone / Laptop<br/>Tailscale client"]
 
     subgraph Shelf["Bookshelf (192.168.0.0/24)"]
         Fish["fishbones<br/>Pi 3B+<br/>Pi-hole, dnscrypt-proxy, Tailscale"]
