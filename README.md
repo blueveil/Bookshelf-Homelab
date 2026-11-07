@@ -1,4 +1,4 @@
-![Bookshelf Homelab](/bookshelf-homelab.png)
+![Bookshelf Homelab](/images/bookshelf-homelab-blank.png)
 
 # Bookshelf Homelab
 
