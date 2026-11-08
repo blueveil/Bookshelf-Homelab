@@ -2,15 +2,20 @@
 
 Everything I used in the Bookshelf Homelab. Back to the [README](README.md).
 
-## Compute
+## Computers
 
 | Item | Model | Specs | Role |
 |---|---|---|---|
 | jinx | Dell OptiPlex 7060 Micro | i5-8500T, 16 GB RAM, 512 GB Samsung 870 EVO | Proxmox VE |
 | powder | HP ProDesk 400 G4 DM | i5-8500T, 16 GB RAM, 512 GB Patriot 210 | Proxmox Backup Server |
 | fishbones | Raspberry Pi 3B+ | 1 GB RAM, 32 GB SanDisk Max Endurance | Pi-hole, dnscrypt-proxy, Tailscale |
-| fishbones Power Supply | [CanaKit 5V 2.5A Raspberry Pi 3 B+ Adapter](https://www.amazon.com/dp/B00MARDJZ4) | 5V 2.5A | Power |
-| fishbones Case | [Geekworm P252 Raspberry Pi 3B+ Case](https://www.amazon.com/dp/B091DP32DW) | N/A | Case |
+
+## Raspberry Pi 3B+ Accessories
+
+| Item | Model | Notes |
+|---|---|---|
+| Power Supply | [CanaKit 5V 2.5A Raspberry Pi 3 B+ Adapter](https://www.amazon.com/dp/B00MARDJZ4) | 5V 2.5A |
+| Case | [Geekworm P252 Raspberry Pi 3B+ Case](https://www.amazon.com/dp/B091DP32DW) | N/A |
 
 ## Network
 
@@ -46,7 +51,7 @@ Everything I used in the Bookshelf Homelab. Back to the [README](README.md).
 
 | Part | Designer | Source | License |
 |---|---|---|---|
-| Patch Panel Bracket | Me | Designed in Onshape | Friction fit instead of using screws to mount to the shelf like originally planned. |
+| Patch Panel Bracket | Me | Designed in Onshape | N/A |
 | 10-Inch 1/2U 8-Port Patch Panel | [Mauker](https://makerworld.com/en/@mauker) | [MakerWorld](https://makerworld.com/en/models/1080877-10-inch-1-2u-keystone-patchpanel-x8-ports) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | Keystone Blanks | [Mauker](https://makerworld.com/en/@mauker) | [MakerWorld](https://makerworld.com/en/models/1111789-keystone-blank) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 
