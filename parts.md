@@ -16,6 +16,7 @@ Everything I used in the Bookshelf Homelab. Back to the [README](README.md).
 |---|---|---|
 | Power Supply | [CanaKit 5V 2.5A Raspberry Pi 3 B+ Adapter](https://www.amazon.com/dp/B00MARDJZ4) | 5V 2.5A |
 | Case | [Geekworm P252 Raspberry Pi 3B+ Case](https://www.amazon.com/dp/B091DP32DW) | N/A |
+| Right-Angle Micro USB Adapter | [Posdou 90 Degree Micro USB Male to Female Adapter](https://www.amazon.com/dp/B01C6031MA) | N/A |
 
 ## Network
 
