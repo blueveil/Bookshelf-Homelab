@@ -28,7 +28,7 @@ Everything I used in the Bookshelf Homelab. Back to the [README](README.md).
 | Item | Model | Notes |
 |---|---|---|
 | Bookshelf | [Furinno 3-Tier Book Shelf](https://www.amazon.com/dp/B0DT4DMH7T) | 3 Tiers |
-| Bracket Mounting | Friction Fit | No Bolts |
+| Bracket Mounting | Custom, Friction Fit | No Bolts |
 
 ## Cabling & Power
 
